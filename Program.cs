@@ -4,7 +4,7 @@ public class Management
 {
     public static void Main()
     {
-        Library item = new Library();
+        var library= new Library();
         while (true)
         {
             Console.WriteLine(".... Library Management System....");
@@ -22,43 +22,74 @@ public class Management
             switch (choice)
             {
                 case "1":
-                    item.PrintAllItems();
+                    library.PrintAllItems();
                     break;
 
                 case "2":
                     Console.Write("Which item want to add: ");
-                    string libraryitem = Console.ReadLine();
-                    //Console.WriteLine(libraryitem);
-                    if(libraryitem == "book")
+                    string ItemName = Console.ReadLine();
+                    LibraryItem item = null;
+                    if(ItemName == "book")
                     {
-                        LibraryItem book = new Book("C# Learing", "Rakib", "1234567890");
-                        item.AddItem(book);
+                        item = new Book("C# Learing", "Rakib", "1234567890");
                     }
-                    else if(libraryitem == "magazine")
+                    else if(ItemName == "magazine")
                     {
                         LibraryItem magazine = new Magazine("The ABC", "243536554");
-                        item.AddItem(magazine);
                     }
+                    else 
+                        Console.WriteLine("Invalid item type");
+                    library.AddItem(item);
                     break;
 
                 case "3":
                     Console.Write("Enter id of item: ");
-                    int itemid = int.Parse(Console.ReadLine());
-                    LibraryItem libitem = item.FindItem(itemid);
-                    ((IBorrowable)libitem).BorrowItem();
+                    LibraryItem BorrowItem = null;
+                    try
+                    {
+                        int ItemId = int.Parse(Console.ReadLine());
+                        BorrowItem = library.FindItem(ItemId);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    if(BorrowItem is IBorrowable borrowableItem)
+                    {
+                        borrowableItem.BorrowItem();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Item is not borrowable.");
+                    }
                     break;
 
                 case "4":
                     Console.Write("Enter id of item: ");
-                    int itemId = int.Parse(Console.ReadLine());
-                    LibraryItem libItem = item.FindItem(itemId);
-                    ((IBorrowable)libItem).ReturnItem();
+                    LibraryItem ReturnItem = null;
+                    try
+                    {
+                        int ItemId = int.Parse(Console.ReadLine());
+                        ReturnItem = library.FindItem(ItemId);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                    if (ReturnItem is IBorrowable returnableItem)
+                    {
+                        returnableItem.ReturnItem();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Item is not returnable.");
+                    }
                     break;
 
                 case "5":
                     Console.Write("Enter Title: ");
                     string searchtext = Console.ReadLine();
-                    item.SearchItems(searchtext);
+                    library.SearchItems(searchtext);
                     break;
 
                 case "6":

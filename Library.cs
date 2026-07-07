@@ -33,12 +33,16 @@ namespace Library_Management_System
                 throw new KeyNotFoundException("Item not found");
         }
         public void SearchItems(string searchtext){
-            List<LibraryItem>? items = _allLibraryItem.FindAll(
+            var items = _allLibraryItem.FindAll(
                     item => item.Title.Contains(searchtext)
             );
 
-            foreach(LibraryItem item in items)
-                Console.WriteLine($"{item.ItemId} - {item.Title}");
+            if(items.Count > 0)
+            {
+                foreach (LibraryItem item in items)
+                    Console.WriteLine($"{item.ItemId} - {item.Title}");
+            }
+            else Console.WriteLine("No items found");
         }
 
         public void PrintAllItems()
