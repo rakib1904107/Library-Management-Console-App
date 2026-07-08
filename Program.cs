@@ -5,6 +5,8 @@ public class Management
     public static void Main()
     {
         var library= new Library();
+        var member = new Member("Rakib");
+        library.AddMember(member);
         while (true)
         {
             Console.WriteLine(".... Library Management System....");
@@ -39,51 +41,39 @@ public class Management
                     }
                     else 
                         Console.WriteLine("Invalid item type");
-                    library.AddItem(item);
+                    if(item != null) library.AddItem(item);
                     break;
 
                 case "3":
                     Console.Write("Enter id of item: ");
-                    LibraryItem BorrowItem = null;
                     try
                     {
                         int ItemId = int.Parse(Console.ReadLine());
-                        BorrowItem = library.FindItem(ItemId);
+                        var BorrowItem = library.FindItem(ItemId);
+                        member.BorrowItem(BorrowItem);
+                        BorrowHistory history = new BorrowHistory(member.UserId, BorrowItem.ItemId,((IBorrowable)BorrowItem).IssueDate, ((IBorrowable)BorrowItem).DueDate,null);
+                        library.AddBorrowHistory(history);
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                    }
-                    if(BorrowItem is IBorrowable borrowableItem)
-                    {
-                        borrowableItem.BorrowItem();
-                    }
-                    else
-                    {
-                        Console.WriteLine("Item is not borrowable.");
                     }
                     break;
 
                 case "4":
                     Console.Write("Enter id of item: ");
-                    LibraryItem ReturnItem = null;
                     try
                     {
                         int ItemId = int.Parse(Console.ReadLine());
-                        ReturnItem = library.FindItem(ItemId);
+                        var ReturnItem = library.FindItem(ItemId);
+                        member.ReturnItem(ReturnItem);
+                        library.UpdateBorrowHistory(member.UserId, ReturnItem.ItemId, ((IBorrowable)ReturnItem).IssueDate, ((IBorrowable)ReturnItem).DueDate, ((IBorrowable)ReturnItem).ReturnDate);
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
                     }
-                    if (ReturnItem is IBorrowable returnableItem)
-                    {
-                        returnableItem.ReturnItem();
-                    }
-                    else
-                    {
-                        Console.WriteLine("Item is not returnable.");
-                    }
+      
                     break;
 
                 case "5":
@@ -93,6 +83,7 @@ public class Management
                     break;
 
                 case "6":
+                    library.PrintBorrowHistory();
                     Console.WriteLine("Exit");
                     return;
 

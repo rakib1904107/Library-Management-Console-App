@@ -10,10 +10,13 @@ namespace Library_Management_System
     public class Library
     {
         private List<LibraryItem> _allLibraryItem;
+        private List<BorrowHistory> _borrowHistory;
+        private List<Member> _allMembers;
 
         public Library()
         {
             _allLibraryItem = new List<LibraryItem>();
+            _borrowHistory = new List<BorrowHistory>();
         }
 
         public void AddItem(LibraryItem item)
@@ -43,6 +46,37 @@ namespace Library_Management_System
                     Console.WriteLine($"{item.ItemId} - {item.Title}");
             }
             else Console.WriteLine("No items found");
+        }
+
+        public void AddBorrowHistory(BorrowHistory history)
+        {
+            _borrowHistory.Add(history);
+        }
+        public void UpdateBorrowHistory(int userid, int itemid, DateTime? issuedate, DateTime? duedate, DateTime? returndate)
+        {
+            BorrowHistory? history = _borrowHistory.FirstOrDefault(h => h.ItemId == itemid && h.IssueDate == issuedate);
+            if (history != null)
+            {
+                _borrowHistory.Remove(history);
+                _borrowHistory.Add(new BorrowHistory(userid, itemid, issuedate, duedate,returndate));
+            }
+            else
+                throw new KeyNotFoundException("Borrow history not found");
+        }
+        public void AddMember(Member member)
+        {
+            _allMembers.Add(member);
+        }
+        public void RemoveMember(Member member)
+        {
+            _allMembers.Remove(member);
+        }
+        public void PrintBorrowHistory()
+        {
+            foreach(BorrowHistory history in _borrowHistory)
+            {
+                Console.WriteLine($"User ID: {history.UserId}, Item ID: {history.ItemId}, Issue Date: {history.IssueDate}, Due Date: {history.DueDate}, Return Date: {history.ReturnDate}");
+            }
         }
 
         public void PrintAllItems()

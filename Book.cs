@@ -14,6 +14,8 @@
         public string ISBN { get; }
 
         public DateTime? DueDate { get; set; }
+        public DateTime? IssueDate { get; set; }
+        public DateTime? ReturnDate { get; set; }
 
         public override int LoanPeriod() => LOAN_PERIOD;
 
@@ -23,13 +25,18 @@
                 throw new InvalidOperationException("Item is not available.");
 
             DueDate = DateTime.Now.AddDays(LOAN_PERIOD);
+            IssueDate = DateTime.Now;
             IsAvailable = false;
             //UpdateAvailablity(false);
         }
 
         public void ReturnItem()
         {
-            DueDate = null;
+            if(DateTime.Now > DueDate)
+            {
+                Console.WriteLine($"The book '{Title}' is returned late. Please pay the fine.");
+            }
+            ReturnDate = DateTime.Now;
             IsAvailable = true;
             //UpdateAvailablity(true);
         }

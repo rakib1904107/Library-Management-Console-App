@@ -8,7 +8,9 @@ namespace Library_Management_System
 {
     public interface IBorrowable
     {
+        DateTime? IssueDate { get; set; }
         DateTime? DueDate { get; set; }
+        DateTime? ReturnDate { get; set; }
         void BorrowItem();
         void ReturnItem();
     }

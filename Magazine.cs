@@ -17,6 +17,8 @@ namespace Library_Management_System
         public string IssueNumber { get; }
 
         public DateTime? DueDate { get; set; }
+        public DateTime? IssueDate { get; set; }
+        public DateTime? ReturnDate { get; set; }
 
         public override int LoanPeriod() => LOAN_PERIOD;
 
@@ -27,11 +29,16 @@ namespace Library_Management_System
 
             DueDate = DateTime.Now.AddDays(LOAN_PERIOD);
             IsAvailable = false;
+            IssueDate = DateTime.Now;
         }
 
         public void ReturnItem()
         {
-            DueDate = null;
+            if (DateTime.Now > DueDate)
+            {
+                Console.WriteLine($"The book '{Title}' is returned late. Please pay the fine.");
+            }
+            ReturnDate = DateTime.Now;
             IsAvailable = true;
         }
 
